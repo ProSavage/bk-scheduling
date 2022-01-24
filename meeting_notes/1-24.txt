@@ -1,0 +1,14 @@
+January 24th
+Attendees: Adia, Carlton, Naman
+
+
+- Do we have to have user stories developed for Architectural Spike Presentation?
+
+
+Naman - Design Decisions
+Adia + Carlton - system metaphor, cycle intent, user stories
+
+- set up dev environment
+
+ACTION ITEMS:
+- Adia: set up meeting with Shannon Price to discuss server set up

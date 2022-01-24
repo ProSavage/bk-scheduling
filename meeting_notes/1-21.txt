@@ -1,0 +1,37 @@
+Date: January 21, 2022
+Attendees: Adia, Carlton, Naman
+
+••••••
+GOAL
+••••••
+- make flow charts for upcoming meeting with sponsors
+
+
+ADIA'S THOUGHTS
+••••••••••••••••
+- would y'all be opposed to doing an asynchronous daily standup? so have something somewhere (we could probably use Figma) that we each on our own time log in and share our statuses so we are on the same page in between meetings
+- are y'all opposed to meeting in person on Monday? i think that'll be easiest to get everything set up
+
+••••••
+NOTES
+••••••
+- daily asynchrous standup
+- BK, tutoring have their own databases
+- on calendar UI: need to have new hire logic
+- token has expiry date
+- magic link log in for everyone
+- ASK: do we want the students to be able to cancel themselves?
+
+
+sample student info
+{
+    name: Naman
+    Id: 123455
+    Roster: <rosterid>
+}
+- roster be an array
+
+••••••••••••
+ASK SPONSOR
+••••••••••••
+- do we want the students to be able to cancel themselves?
