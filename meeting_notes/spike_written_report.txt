@@ -1,0 +1,13 @@
+SPIKE WRITTEN REPORT
+
+---------
+CONTENTS
+---------
+- description / metaphor
+- requirements / user stories / use cases
+- data / network / protocol specs or schemas
+- design documents / UML
+- process documentation
+- management plan / schedule / assignments
+- test plans
+- correspondence / minutes
