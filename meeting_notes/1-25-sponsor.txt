@@ -1,0 +1,43 @@
+January 25th
+attendees: Adia, Carlton, Naman
+
+•••••••
+AGENDA
+•••••••
+- go over flow chart + get it approved
+- discuss server set up with Mr. Shannon Price
+
+••••••••••
+MTG NOTES
+••••••••••
+- appprove schedule for the semester -- don't want changes
+- approve semester schedule at the beginning of the semester or these are the adjustments I need to make
+- reserve box good for manual adjustments
+- set it and forget it for the semester 
+- week to week changes will be over groupme/other
+- permanent schedule for the entire semester 
+- reserve is just on admin side
+
+would like: list with the all the students and counter for hours and change the color if they have reached their max hours
+would like: 90******* numbers to be stored in admin view
+
+
+currently, students color code times:
+Red: really would like
+Black: would work if have to  
+
+•••••••••••••••••••
+SHANNON + SERVERS
+•••••••••••••••••••
+- nodeJS 
+- need a linux server and docker
+- webserver, backend server, database server
+- mongoDB
+- rootless docker; engineX; 
+- SSH to VM and be able to up and down docker
+- we do docker containers, they do everything else
+- SMTP server that sends emails
+
+server will be up next week
+
+ACTION ITEMS: front end name
