@@ -1,0 +1,18 @@
+Status Report Meeting Notes 
+
+••••••••••
+QUESTIONS
+••••••••••
+- what exactly needs to be turned in?
+- what needs to be included in the presentation?
+- do we ask for and get the sponsor signature?
+- where can we find the management plan template?
+
+
+talk about user stories 
+
+briefly talk about document-mostly user stories; what features we plan to accomplish; issues
+
+go over documentation and get sponsor signature on that 
+
+presentation scheduled for Feb. 9th in classroom
