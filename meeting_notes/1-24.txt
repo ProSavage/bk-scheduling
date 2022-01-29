@@ -8,7 +8,7 @@ Attendees: Adia, Carlton, Naman
 Naman - Design Decisions
 Adia + Carlton - system metaphor, cycle intent, user stories
 
-- set up dev environment
+- we worked on setting up dev environment
 
 ACTION ITEMS:
 - Adia: set up meeting with Shannon Price to discuss server set up

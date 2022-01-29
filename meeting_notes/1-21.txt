@@ -6,12 +6,6 @@ GOAL
 ••••••
 - make flow charts for upcoming meeting with sponsors
 
-
-ADIA'S THOUGHTS
-••••••••••••••••
-- would y'all be opposed to doing an asynchronous daily standup? so have something somewhere (we could probably use Figma) that we each on our own time log in and share our statuses so we are on the same page in between meetings
-- are y'all opposed to meeting in person on Monday? i think that'll be easiest to get everything set up
-
 ••••••
 NOTES
 ••••••
