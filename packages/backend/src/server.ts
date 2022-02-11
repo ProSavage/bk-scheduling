@@ -1,5 +1,5 @@
 import express from "express";
-import { Mongoose as mongoose } from "mongoose";
+import { connect } from "mongoose";
 import { authRouter } from "./routes/AuthRouter";
 
 const app = express();
@@ -13,8 +13,10 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter)
 
 const PORT = 5001;
-const connection = mongoose.createConnection({
-});
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+console.log("Attempting database connection...")
+const connection = connect("mongodb://localhost:27017/auth").then(() => {
+    console.log("Database connected");
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 });
