@@ -1,8 +1,7 @@
 import { AuthFormBase } from "../../components/auth/AuthFormBase";
-import { Text, Box, Button, Link, useDisclosure } from "@chakra-ui/react";
+import { Text, Box, Button, useDisclosure } from "@chakra-ui/react";
 import { Formik, Form } from "formik"
 import React from "react";
-import { useRouter } from "next/router";
 import { FormInputField } from "../../components/util/FormControlField";
 import { API } from "../../api";
 import { EmailLinkModal } from "../../components/auth/login/EmailLinkModal";
@@ -43,8 +42,6 @@ const Login = () => {
                             width={"100%"}
                         >Get Magic Link</Button>
                     </Box>
-                    {/* <Text textAlign={"center"} my={2}>Don't have an account? <Link href={"/auth/signup"} color={"blue.300"}>Signup</Link></Text> */}
-
                 </Form>
             )}
         </Formik>

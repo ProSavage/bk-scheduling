@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@bk-scheduling/backend",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "express": "^4.17.2",
     "mongoose": "^6.2.1",
     "morgan": "^1.10.0",
-    "shortid": "^2.2.16"
+    "shortid": "^2.2.16",
+    "@bk-scheduling/common": "^1.0.0"
   }
 }

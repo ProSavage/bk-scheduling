@@ -44,7 +44,7 @@ const Redeem = () => {
             setTokenStatus(TokenStatus.SUCCESS);
             window.localStorage.setItem("token", session.token);
             setToken(session.token);
-            backToRoute("/dashboard");
+            backToRoute("/");
             return;
         }
     }

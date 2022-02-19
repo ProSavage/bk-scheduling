@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app'
 import { ChakraProvider, Flex } from '@chakra-ui/react'
 import Head from "next/head";
-import { Navbar } from '../components/_app/Navbar';
 import { PageContainer } from '../components/_app/PageContainer';
 import theme from '../theme';
 import { useEffect } from 'react';

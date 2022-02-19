@@ -1,7 +1,7 @@
 import { Flex, Text, IconButton } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react"
-import { Key, LogIn } from "react-feather";
+import { Key } from "react-feather";
 
 interface NavbarProps {
 
