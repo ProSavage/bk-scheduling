@@ -8,7 +8,7 @@ const scheduleRouter = express.Router();
 
 scheduleRouter.post("/new", async (req, res) => {
     const { name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek } = req.body;
-
+    console.log({name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek})
     // Validate input
     if (!name || !intervalsPerDay || !timeIntervalInMinutes || !daysOfWeek) {
         res.json({ success: false, error: "Missing fields" });
@@ -104,22 +104,5 @@ scheduleRouter.post("/new", async (req, res) => {
 });
 
 //get all
-scheduleRouter.get("/", async (req, res) => {
-    //do stuff
-})
-
-//get one
-scheduleRouter.get("/:id", async (req, res) => {
-    //do stuff
-})
-
-//creating one
-scheduleRouter.post("/", async (req, res) => {
-    //do stuff
-})
-
-scheduleRouter.patch("/:id", async (req, res) => {
-    //do stuff
-})
 
 export { scheduleRouter };
