@@ -1,14 +1,15 @@
-import { WeekDay } from "@bk-scheduling/common";
+import { WeekDay, Schedule } from "@bk-scheduling/common";
 import express from "express";
 import shortid from "shortid";
-import { Schedule, Schedules } from "../database/models/Schedule";
+import { Schedules } from "../database/models/Schedule";
+import { Users } from "../database/models/User";
 
 const scheduleRouter = express.Router();
 
 
 scheduleRouter.post("/new", async (req, res) => {
     const { name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek } = req.body;
-    console.log({name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek})
+    console.log({ name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek })
     // Validate input
     if (!name || !intervalsPerDay || !timeIntervalInMinutes || !daysOfWeek) {
         res.json({ success: false, error: "Missing fields" });
@@ -82,8 +83,12 @@ scheduleRouter.post("/new", async (req, res) => {
     const validDays = Object.values(WeekDay);
     for (const day of daysOfWeek) {
         if (!validDays.includes(day)) {
-            res.json({ success: false, error: { message: "Invalid day of the week '" + day + "'",
-             field: "daysOfWeek" } });
+            res.json({
+                success: false, error: {
+                    message: "Invalid day of the week '" + day + "'",
+                    field: "daysOfWeek"
+                }
+            });
             return;
         }
     }
@@ -95,13 +100,72 @@ scheduleRouter.post("/new", async (req, res) => {
         intervalsPerDay,
         timeIntervalInMinutes,
         daysOfWeek,
-        owner: "test"
+        owner: req.user._id
     }
+
 
     await Schedules.create(schedule);
 
-    res.json({ success: true })
+    res.json({ success: true, schedule })
 });
+
+scheduleRouter.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+    const schedule = await Schedules.findOne({ _id: id, owner: req.user._id });
+    if (!schedule) {
+        res.json({ success: false, error: "Schedule not found" });
+        return;
+    }
+
+    if (schedule.owner !== req.user._id) {
+        res.failure("You do not have permission to delete this schedule.");
+        return;
+    }
+
+    await Schedules.deleteOne({ _id: id });
+
+    res.json({ success: true });
+})
+
+scheduleRouter.get("/:id/roster", async (req, res) => {
+    const { id } = req.params;
+    const schedule = await Schedules.findOne({ _id: id });
+    if (!schedule) {
+        res.failure("Schedule not found");
+        return;
+    }
+
+    if (schedule.owner !== req.user._id) {
+        res.json("You do not own this schedule");
+        return;
+    }
+
+    const roster = await Users.find({ schedules: { $in: schedule._id } })
+    res.json( roster );
+})
+
+scheduleRouter.get("/:id", async (req, res) => {
+    const schedule = await Schedules.findOne({ _id: req.params.id });
+    if (!schedule) {
+        res.failure("Schedule not found.");
+        return
+    }
+
+    if (schedule.owner !== req.user._id) {
+        res.failure("You do not have permission to view this schedule.");
+        return;
+    }
+
+    res.json(schedule);
+})
+
+
+
+scheduleRouter.get("/", async (req, res) => {
+    const schedules = await Schedules.find({ owner: req.user._id });
+    res.json(schedules);
+})
+
 
 //get all
 

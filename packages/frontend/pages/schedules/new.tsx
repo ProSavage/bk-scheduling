@@ -3,11 +3,14 @@ import { Form, Formik } from "formik";
 import { FormInputField } from "../../components/util/FormControlField";
 import { WeekDay } from "@bk-scheduling/common";
 import { API } from "../../api";
+import { useRouter } from "next/router";
 const NewSchedule = () => {
 
     const daysOfWeekBorderColor = (ifError: boolean) => {
         return ifError ? "#E53E3E" : "#718096";
     }
+
+    const router = useRouter();
 
     return <Flex flexDir={"column"} p={4} alignItems={"center"} width={"100%"}>
         <Text fontWeight={"bold"} fontSize={"3xl"}>Schedule Setup</Text>
@@ -22,7 +25,7 @@ const NewSchedule = () => {
                 onSubmit={async (values, { setErrors }) => {
                     // Do stuff
                     console.log("sending...", values);
-                    const { error, success } = await API.schedule.newSchedule(
+                    const { error, success, schedule } = await API.schedule.newSchedule(
                         values.name,
                         values.intervalsPerDay,
                         values.timeIntervalInMinutes,
@@ -39,6 +42,7 @@ const NewSchedule = () => {
 
                     if (success) {
                         console.log("Created..")
+                        router.push("/schedules/roster/[id]", `/schedules/roster/${schedule._id}`);
                     } else {
                         console.log("failed.")
                     }

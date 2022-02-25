@@ -1,15 +1,7 @@
-import { WeekDay } from "@bk-scheduling/common";
+import { Schedule } from "@bk-scheduling/common";
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
-export interface Schedule {
-    _id: string,
-    owner: string,
-    name: string,
-    intervalsPerDay: number,
-    timeIntervalInMinutes: number,
-    daysOfWeek: WeekDay[],
-}
 
 const scheduleSchema = new Schema<Schedule>({
     _id: String,

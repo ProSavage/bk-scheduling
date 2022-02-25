@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { isExpired, LoginTokens } from "../database/models/LoginToken";
 import shortid from "shortid";
 import { Sessions } from "../database/models/Session";
+import { Users } from "../database/models/User";
 
 const authRouter = express.Router();
 
@@ -11,17 +12,23 @@ const authRouter = express.Router();
 authRouter.post("/login", async (req, res) => {
       const { email } = req.body;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            res.json({success: false, error: "Invalid email."});
+            res.json({ success: false, error: "Invalid email." });
             return;
       }
       if (!email.endsWith("@auburn.edu")) {
             res.json({ success: false, error: "You must use your Auburn email to login." });
             return;
       }
+
+      const user = await Users.findOne({ email });
+      if (!user) {
+            res.json({ success: false, error: "You haven't been whitelisted on this platform." });
+            return;
+      }
       console.log(`Login request for ${email}`);
       // generate a token.
       const tokenStr = crypto.randomBytes(32).toString("hex");
-      console.log(`token is ${tokenStr}`);
+      console.log(`http://localhost:3000/auth/redeem?token=${tokenStr}`);
       // save the token to the database.
       const tokenDoc = {
             _id: shortid.generate(),
@@ -56,11 +63,17 @@ authRouter.get("/redeem/:token", async (req, res) => {
       // Activate the token.
       tokenDoc.activated = true;
       tokenDoc.save();
+
+      const user = await Users.findOne({ email: tokenDoc.userEmail });
+      if (!user) {
+            res.failure("User not found.");
+            return;
+      }
       // Create a session.
       const session = {
             _id: shortid.generate(),
             token: crypto.randomBytes(16).toString("hex"),
-            user: tokenDoc.userEmail
+            user: user._id,
       }
       await Sessions.create(session)
       res.json({ success: true, session });

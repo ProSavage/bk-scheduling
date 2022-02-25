@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import { User } from "./User";
 
 export interface Session {
       _id: string,
       token: string,
-      user: string,
+      user: User["_id"],
 }
 
 const sessionSchema = new Schema<Session>({

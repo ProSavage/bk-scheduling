@@ -5,6 +5,6 @@
   	"packages/*"
   ],
   "scripts": {
-    "dev": "cd packages/frontend && yarn dev & cd packages/backend && yarn dev"
+    "dev": "cd packages/common && yarn build-watch & cd packages/frontend && yarn dev & cd packages/backend && yarn dev"
   }
 }

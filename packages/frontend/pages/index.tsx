@@ -1,6 +1,7 @@
 import { Button, Flex, Text } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { Schedules } from '../components/index/Schedules';
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -10,6 +11,7 @@ const Home: NextPage = () => {
         <Text fontSize={"3xl"} fontWeight={"bold"}>Home</Text>
         <Button onClick={() => router.push("/schedules/new")}>New Schedule</Button>
       </Flex>
+      <Schedules/>
     </Flex>
   )
 }
