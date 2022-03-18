@@ -2,14 +2,15 @@ import { ScheduleTime } from "@bk-scheduling/common";
 import { axiosClient } from "./axios";
 
 export const schedule = {
-    async newSchedule(name: string, intervalsPerDay: number, timeIntervalInMinutes: number, daysOfWeek: string[], startTime: ScheduleTime) {
+    async newSchedule(name: string, intervalsPerDay: number, timeIntervalInMinutes: number, daysOfWeek: string[], startTimeHour: number, startTimeMinute: number) {
         return (await axiosClient.post("/schedule/new", {
             name,
             intervalsPerDay,
             timeIntervalInMinutes,
             daysOfWeek,
-            startTime
-        })).data;
+            startTimeHour,
+            startTimeMinute
+        }));
     },
     async getSchedules() {
         return (await axiosClient.get("/schedule")).data;

@@ -1,127 +1,75 @@
 import { WeekDay, Schedule } from "@bk-scheduling/common";
 import express from "express";
+import { body, Meta, validationResult } from "express-validator";
 import shortid from "shortid";
 import { Schedules } from "../database/models/Schedule";
 import { Users } from "../database/models/User";
 
 const scheduleRouter = express.Router();
+const MINUTES_IN_A_DAY = 60 * 24;
+scheduleRouter.post("/new",
+    body("name")
+        .isString().withMessage("Name must be a string")
+        .bail()
+        .isLength({ min: 4 }).withMessage("Name must be at least 4 characters long"),
+    body(["intervalsPerDay", "timeIntervalInMinutes"])
+        .isNumeric().withMessage("Value must be a number")
+        .bail()
+        .toInt()
+        .custom(number => number > 0).withMessage("Value must be greater than 0")
+        .bail()
+        .if((_value: any, { path }: Meta) => path === "timeIntervalInMinutes")
+        .custom((number) => number < MINUTES_IN_A_DAY).withMessage("Time interval cannot be greater than a day"),
+    body("daysOfWeek")
+        .isArray().withMessage("Value must be an array")
+        .bail()
+        .isLength({ min: 1, max: 7 }).withMessage("Value must be an array of length 1-7")
+        .bail()
+        .custom((array) => array.every((day: any) => Object.values(WeekDay).includes(day))).withMessage("Value must be an array of valid days"),
+    body("startTimeHour")
+        .isNumeric().withMessage("Value must be number")
+        .bail()
+        .toInt()
+        .custom((number) => number >= 0 && number <= 23).withMessage("Hour must be between 0-23"),
+    body("startTimeMinute")
+        .isNumeric().withMessage("Value must be number")
+        .bail()
+        .toInt()
+        .custom((number) => number >= 0 && number <= 59).withMessage("Minute must be between 0-59"),
+    async (req, res) => {
+        const { name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek, startTimeHour, startTimeMinute } = req.body;
+        // Validate input
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array())
+            res.failure(errors.array());
+            return
+        }
 
-
-scheduleRouter.post("/new", async (req, res) => {
-    const { name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek, startTime } = req.body;
-    console.log({ name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek, startTime })
-    // Validate input
-    if (!name || !intervalsPerDay || !timeIntervalInMinutes || !daysOfWeek ){
-        res.json({ success: false, error: "Missing fields" });
-        return;
-    }
-
-    if (name.length < 4) {
-        res.json({
-            success: false, error: {
-                message: "Name must be at least 4 characters long.",
-                field: "name"
-            }
-        });
-        return;
-    }
-
-    if (intervalsPerDay < 1) {
-        res.json({
-            success: false, error: {
-                message: "Intervals per day must be at least 1",
-                field: "intervalsPerDay"
-            }
-        });
-        return;
-    }
-
-    if (timeIntervalInMinutes < 1) {
-        res.json({
-            success: false, error: {
-                message: "Time interval must be at least 1 minute",
-                field: "timeIntervalInMinutes"
-            }
-        });
-        return;
-    }
-
-    // Is timeIntervalInMinutes less than a day
-    const MINUTES_IN_A_DAY = 60 * 24;
-    if (timeIntervalInMinutes > MINUTES_IN_A_DAY) {
-        res.json({
-            success: false, error: {
-                message: "Time interval cannot be greater than a day",
-                field: "timeIntervalInMinutes"
-            }
-        });
-        return;
-    }
-
-    // Is timeIntervalInMinutes * intervalsPerDay less than a day
-    if (timeIntervalInMinutes * intervalsPerDay > MINUTES_IN_A_DAY) {
-        res.json({
-            success: false, error: {
-                message: "Time interval * intervals per day cannot be greater than a day",
-                field: "intervalsPerDay"
-            }
-        });
-        return;
-    }
-
-    // Is Days of the week valid
-    if (daysOfWeek.length === 0 || daysOfWeek.length > 7) {
-        res.json({
-            success: false, error: {
-                message: "Days of the week must be between 1 and 7",
-                field: "daysOfWeek"
-            }
-        });
-        return;
-    }
-
-    const validDays = Object.values(WeekDay);
-    for (const day of daysOfWeek) {
-        if (!validDays.includes(day)) {
-            res.json({
-                success: false, error: {
-                    message: "Invalid day of the week '" + day + "'",
-                    field: "daysOfWeek"
-                }
-            });
+        // Is timeIntervalInMinutes * intervalsPerDay less than a day
+        if (timeIntervalInMinutes * intervalsPerDay > MINUTES_IN_A_DAY) {
+            res.failureValidation("intervalsPerDay", "Time interval * intervals per day cannot be greater than a day")
             return;
         }
-    }
 
-    // if (startTime.hour < 0 || startTime.hour > 23) {
-    //     res.json({
-    //         success: false, error: {
-    //             message: "Start time hour must be between 0 and 23",
-    //             field: "startTime.hour"
-    //         }
-    //     });
-    //     return;
-    // }
-
-    // Create the schedule
-    const schedule: Schedule = {
-        _id: shortid.generate(),
-        name,
-        intervalsPerDay,
-        timeIntervalInMinutes,
-        daysOfWeek,
-        owner: req.user._id,
-        startTime: {
-            hour: 8,
-            minute: 0
+        // Create the schedule
+        const schedule: Schedule = {
+            _id: shortid.generate(),
+            name,
+            intervalsPerDay,
+            timeIntervalInMinutes,
+            daysOfWeek,
+            owner: req.user._id,
+            startTime: {
+                hour: startTimeHour,
+                minute: startTimeMinute
+            }
         }
-    }
 
 
-    await Schedules.create(schedule);
-
-    res.json({ success: true, schedule })
-});
+        await Schedules.create(schedule);
+        res.success({schedule})
+    });
 
 scheduleRouter.delete("/:id", async (req, res) => {
     const { id } = req.params;
@@ -155,7 +103,7 @@ scheduleRouter.get("/:id/roster", async (req, res) => {
     }
 
     const roster = await Users.find({ schedules: { $in: schedule._id } })
-    res.json( roster );
+    res.json(roster);
 })
 
 scheduleRouter.get("/:id", async (req, res) => {

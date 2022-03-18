@@ -5,7 +5,6 @@ import React from "react";
 import { FormInputField } from "../../components/util/FormControlField";
 import { API, transformValidationErrorsForForm } from "../../api";
 import { EmailLinkModal } from "../../components/auth/login/EmailLinkModal";
-import { AxiosError } from "axios";
 
 const Login = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -24,7 +23,7 @@ const Login = () => {
                 setErrors(transformValidationErrorsForForm(errors));
             }}
         >
-            {({ values, isSubmitting, errors }) => (
+            {({ values, isSubmitting }) => (
                 <Form style={{ width: "100%" }}>
                     <Box my={1}>
                         <FormInputField

@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { Sessions } from "./database/models/Session";
 import { Users } from "./database/models/User";
 import { attachMiddleware } from "./util/Middleware";
+import shortid from "shortid";
 const app = express();
 
 app.use((req, res, next) => attachMiddleware(req, res, next))
@@ -60,5 +61,6 @@ const connection = connect("mongodb://localhost:27017/bk-scheduling").then(() =>
     console.log("Database connected");
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
+       
     });
 });

@@ -6,13 +6,13 @@ export const attachMiddleware = (_req: Request, res: Response, next: NextFunctio
         res.status(status ? status : 200).json({ success: false, errors });
     };
     res.failureWithMessage = (message: string, status?: number) => {
-        res.status(status ? status : 200).json({success: false, errors: [{param: "_error", msg: message}]});
+        res.status(status ? status : 200).json({ success: false, errors: [{ param: "_error", msg: message }] });
     };
     res.failureValidation = (param: string, message: string) => {
-        res.status(200).json({success: false, errors: [{param, msg: message}]});
+        res.status(200).json({ success: false, errors: [{ param, msg: message }] });
     }
-    res.success = (data: any) => {
-        res.status(200).json({ success: true, data });
+    res.success = (data: Object) => {
+        res.status(200).json({ success: true, ...data });
     };
     next()
 }

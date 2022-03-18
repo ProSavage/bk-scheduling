@@ -16,7 +16,11 @@ const Roster: NextPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
 
+    // Original users represents the "Curerent Members" in the database.
     const [originalUsers, setOriginalUsers] = useState<User[]>([]);
+    // These are the modified set of Current Members, 
+    // this is mostly here in case the user wants to edit any existing original users
+
     const [users, setUsers] = useState<User[]>([]);
 
 
@@ -35,6 +39,10 @@ const Roster: NextPage = () => {
 
     }, [])
 
+    // Checks if the admin has modified any existing users first.
+    // 1. check if any existing users are deleted.
+    // 2. check if any new members have been added.
+    // 3. check if any existing users have been modified.
     const areUsersTheSame = () => {
         if (users.length !== originalUsers.length) return false;
         if (newMembers.length > 0) return false;
@@ -63,7 +71,7 @@ const Roster: NextPage = () => {
         <Flex width={"100%"} my={1}>
             {newMembers.map(member => <UserItem key={member.email} firstName={member.firstName} lastName={member.lastName} email={member.email} onDelete={() => {setNewMembers(newMembers.filter(u => u !== member))}} onEdit={() => { }} />)}
         </Flex>
-        <NewUserModal isOpen={isOpen} onClose={onClose} addUser={(newUser) => setNewMembers(newMembers.concat(newUser))} existingUsers={users} />
+        <NewUserModal isOpen={isOpen} onClose={onClose} addUser={(newUser) => setNewMembers(newMembers.concat(newUser))} existingUsers={newMembers.concat(users)} />
     </Flex>
 }
 

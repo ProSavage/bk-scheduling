@@ -31,8 +31,8 @@ const Redeem = () => {
             return;
         }
 
-        const { success, session, error } = await API.auth.redeem(token);
-
+        const response = await API.auth.redeem(token);
+        const { success, session, error } = response.data;
         if (error) {
             setError(error);
             setTokenStatus(TokenStatus.ERROR);

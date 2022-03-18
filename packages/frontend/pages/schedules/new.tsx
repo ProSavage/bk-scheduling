@@ -2,7 +2,7 @@ import { Box, Button, Flex, FormErrorMessage, NumberDecrementStepper, NumberIncr
 import { Form, Formik } from "formik";
 import { FormInputField } from "../../components/util/FormControlField";
 import { WeekDay } from "@bk-scheduling/common";
-import { API } from "../../api";
+import { API, transformValidationErrorsForForm } from "../../api";
 import { useRouter } from "next/router";
 const NewSchedule = () => {
 
@@ -20,36 +20,32 @@ const NewSchedule = () => {
                     name: "My Schedule",
                     intervalsPerDay: 6,
                     timeIntervalInMinutes: 30,
-                    startTime: {
-                        hour: 8,
-                        minute: 0
-                    },
+                    startTimeHour: 8,
+                    startTimeMinute: 0,
                     daysOfWeek: []
                 }}
                 onSubmit={async (values, { setErrors }) => {
                     // Do stuff
                     console.log("sending...", values);
-                    const { error, success, schedule } = await API.schedule.newSchedule(
+                    const response  = await API.schedule.newSchedule(
                         values.name,
                         values.intervalsPerDay,
                         values.timeIntervalInMinutes,
-                        values.daysOfWeek
+                        values.daysOfWeek,
+                        values.startTimeHour,
+                        values.startTimeMinute
                     );
-
-                    console.log("response", { error, success });
-
-
-                    if (error) {
-                        setErrors({ [error.field]: error.message })
-                        return;
-                    }
+                    const { errors, success, schedule } = response.data;
 
                     if (success) {
                         console.log("Created..")
+                        console.log(response.data);
                         router.push("/schedules/roster/[id]", `/schedules/roster/${schedule._id}`);
-                    } else {
-                        console.log("failed.")
-                    }
+                        return;
+                    } 
+
+                    setErrors(transformValidationErrorsForForm(errors));
+                    console.log(transformValidationErrorsForForm(errors))
 
                 }}
             >
@@ -83,19 +79,19 @@ const NewSchedule = () => {
                         <Flex flexDir={"row"}>
                             <Box flexGrow={1} mr={1} my={1}>
                                 <FormInputField
-                                    name={"startTime.hour"}
+                                    name={"startTimeHour"}
                                     label={"Start Time Hour"}
                                     type={"number"}
-                                    placeholder={values?.startTime.hour.toString()}
+                                    placeholder={values?.startTimeHour.toString()}
                                     helper={"What hour does your schedule start?"}
                                 />
                             </Box>
                             <Box flexGrow={1} my={1}>
                                 <FormInputField
-                                    name={"startTime.minute"}
+                                    name={"startTimeMinute"}
                                     label={"Start Time Minute"}
                                     type={"number"}
-                                    placeholder={values?.startTime.minute.toString()}
+                                    placeholder={values?.startTimeMinute.toString()}
                                     helper={"What minute does your schedule start?"}
                                 />
                             </Box>
