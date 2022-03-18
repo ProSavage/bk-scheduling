@@ -9,6 +9,11 @@ const scheduleSchema = new Schema<Schedule>({
     name: String,
     intervalsPerDay: Number,
     timeIntervalInMinutes: Number,
+    
+    startTime: {
+        hour: Number,
+        minute: Number
+    },
     daysOfWeek: [],
 });
 

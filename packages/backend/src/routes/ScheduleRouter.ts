@@ -8,10 +8,10 @@ const scheduleRouter = express.Router();
 
 
 scheduleRouter.post("/new", async (req, res) => {
-    const { name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek } = req.body;
-    console.log({ name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek })
+    const { name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek, startTime } = req.body;
+    console.log({ name, intervalsPerDay, timeIntervalInMinutes, daysOfWeek, startTime })
     // Validate input
-    if (!name || !intervalsPerDay || !timeIntervalInMinutes || !daysOfWeek) {
+    if (!name || !intervalsPerDay || !timeIntervalInMinutes || !daysOfWeek ){
         res.json({ success: false, error: "Missing fields" });
         return;
     }
@@ -93,6 +93,16 @@ scheduleRouter.post("/new", async (req, res) => {
         }
     }
 
+    // if (startTime.hour < 0 || startTime.hour > 23) {
+    //     res.json({
+    //         success: false, error: {
+    //             message: "Start time hour must be between 0 and 23",
+    //             field: "startTime.hour"
+    //         }
+    //     });
+    //     return;
+    // }
+
     // Create the schedule
     const schedule: Schedule = {
         _id: shortid.generate(),
@@ -100,7 +110,11 @@ scheduleRouter.post("/new", async (req, res) => {
         intervalsPerDay,
         timeIntervalInMinutes,
         daysOfWeek,
-        owner: req.user._id
+        owner: req.user._id,
+        startTime: {
+            hour: 8,
+            minute: 0
+        }
     }
 
 

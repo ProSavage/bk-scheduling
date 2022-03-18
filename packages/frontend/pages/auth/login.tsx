@@ -3,8 +3,9 @@ import { Text, Box, Button, useDisclosure } from "@chakra-ui/react";
 import { Formik, Form } from "formik"
 import React from "react";
 import { FormInputField } from "../../components/util/FormControlField";
-import { API } from "../../api";
+import { API, transformValidationErrorsForForm } from "../../api";
 import { EmailLinkModal } from "../../components/auth/login/EmailLinkModal";
+import { AxiosError } from "axios";
 
 const Login = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -13,17 +14,17 @@ const Login = () => {
         <Formik
             initialValues={{ email: "" }}
             onSubmit={async (values, { setErrors }) => {
-                const { success, token, error } = await API.auth.login(values.email);
-                if (error) {
-                    setErrors({ email: error })
-                    return;
-                }
+                const response = await API.auth.login(values.email);
+                const { success, errors } = response.data;
                 if (success) {
                     onOpen();
+                    return;
                 }
+
+                setErrors(transformValidationErrorsForForm(errors));
             }}
         >
-            {({ values, isSubmitting }) => (
+            {({ values, isSubmitting, errors }) => (
                 <Form style={{ width: "100%" }}>
                     <Box my={1}>
                         <FormInputField
@@ -45,7 +46,7 @@ const Login = () => {
                 </Form>
             )}
         </Formik>
-        <EmailLinkModal isOpen={isOpen} onClose={onClose}/>
+        <EmailLinkModal isOpen={isOpen} onClose={onClose} />
     </AuthFormBase>
 }
 

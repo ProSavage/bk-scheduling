@@ -1,5 +1,6 @@
 import { User } from "./src/database/models/User";
 import { Request, Response } from "express";
+import { ValidationError } from "express-validator";
 
 declare global {
     declare namespace Express {
@@ -8,7 +9,9 @@ declare global {
         }
 
         export interface Response {
-            failure: (message: string, status?: number) => void
+            failureWithMessage: (message: string, status?: number) => void
+            failureValidation: (param: string, message: string ) => void
+            failure: (errors: ValidationError[], status?: number) => void
             success: (data: any) => void
         }
     }

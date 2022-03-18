@@ -8,7 +8,7 @@ interface NewUserModalProps {
     isOpen: boolean;
     onClose: () => void;
     addUser: (newUser: NewUser) => void,
-    existingUsers: User[]
+    existingUsers: NewUser[]
 }
 
 export const NewUserModal: React.FC<NewUserModalProps> = ({ isOpen, onClose, addUser, existingUsers }) => {

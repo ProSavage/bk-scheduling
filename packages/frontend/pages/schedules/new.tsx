@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormErrorMessage, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormErrorMessage, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { FormInputField } from "../../components/util/FormControlField";
 import { WeekDay } from "@bk-scheduling/common";
@@ -20,6 +20,10 @@ const NewSchedule = () => {
                     name: "My Schedule",
                     intervalsPerDay: 6,
                     timeIntervalInMinutes: 30,
+                    startTime: {
+                        hour: 8,
+                        minute: 0
+                    },
                     daysOfWeek: []
                 }}
                 onSubmit={async (values, { setErrors }) => {
@@ -76,6 +80,29 @@ const NewSchedule = () => {
                                 helper={"How many time intervals are in a day?"}
                             />
                         </Box>
+                        <Flex flexDir={"row"}>
+                            <Box flexGrow={1} mr={1} my={1}>
+                                <FormInputField
+                                    name={"startTime.hour"}
+                                    label={"Start Time Hour"}
+                                    type={"number"}
+                                    placeholder={values?.startTime.hour.toString()}
+                                    helper={"What hour does your schedule start?"}
+                                />
+                            </Box>
+                            <Box flexGrow={1} my={1}>
+                                <FormInputField
+                                    name={"startTime.minute"}
+                                    label={"Start Time Minute"}
+                                    type={"number"}
+                                    placeholder={values?.startTime.minute.toString()}
+                                    helper={"What minute does your schedule start?"}
+                                />
+                            </Box>
+                        </Flex>
+                        <Box>
+
+                        </Box>
                         <Box>
                             <Text fontWeight={"medium"}>
                                 Days of the week
@@ -89,7 +116,7 @@ const NewSchedule = () => {
                                 borderRadius={5}
                             >
                                 {Object.values(WeekDay)
-                                    .map((dayofWeek) => <Box m={1}>
+                                    .map((dayofWeek) => <Box m={1} key={dayofWeek}>
                                         <FormInputField
                                             name={"daysOfWeek"}
                                             label={`${dayofWeek.charAt(0).toUpperCase()}${dayofWeek.slice(1)}`}
@@ -99,11 +126,11 @@ const NewSchedule = () => {
                                             showError={false}
                                         />
                                     </Box>)}
-                                
+
                             </Flex>
                             {errors?.daysOfWeek &&
-                                    <Text color={"error"}>Error: {errors["daysOfWeek"]}</Text>
-                                }
+                                <Text color={"error"}>Error: {errors["daysOfWeek"]}</Text>
+                            }
                         </Box>
                         <Flex my={5} width={"100%"} justifyContent={"center"}>
                             <Button type={"submit"} isLoading={isSubmitting}>

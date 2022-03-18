@@ -1,13 +1,14 @@
-import { WeekDay } from "@bk-scheduling/common";
+import { ScheduleTime } from "@bk-scheduling/common";
 import { axiosClient } from "./axios";
 
 export const schedule = {
-    async newSchedule(name: string, intervalsPerDay: number, timeIntervalInMinutes: number, daysOfWeek: string[]) {
+    async newSchedule(name: string, intervalsPerDay: number, timeIntervalInMinutes: number, daysOfWeek: string[], startTime: ScheduleTime) {
         return (await axiosClient.post("/schedule/new", {
             name,
             intervalsPerDay,
             timeIntervalInMinutes,
-            daysOfWeek
+            daysOfWeek,
+            startTime
         })).data;
     },
     async getSchedules() {
@@ -21,5 +22,6 @@ export const schedule = {
     },
     async deleteSchedule(id: string) {
         return (await axiosClient.delete(`/schedule/${id}`)).data;
-    }
+    },
+
 };

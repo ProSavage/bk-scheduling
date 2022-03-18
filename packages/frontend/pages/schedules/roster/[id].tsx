@@ -57,11 +57,11 @@ const Roster: NextPage = () => {
         </Flex>
         <Text fontSize={"xl"}>Current Members:</Text>
         <Flex width={"100%"} my={1}>
-            {users.map(user => <UserItem firstName={user.firstName} lastName={user.lastName} email={user.email} onDelete={() => {setUsers(users.filter(u => u !== user))}} onEdit={() => { }} />)}
+            {users.map(user => <UserItem key={user._id} firstName={user.firstName} lastName={user.lastName} email={user.email} onDelete={() => {setUsers(users.filter(u => u !== user))}} onEdit={() => { }} />)}
         </Flex>
         <Text fontSize={"xl"}>New Members:</Text>
         <Flex width={"100%"} my={1}>
-            {newMembers.map(member => <UserItem firstName={member.firstName} lastName={member.lastName} email={member.email} onDelete={() => {setNewMembers(newMembers.filter(u => u !== member))}} onEdit={() => { }} />)}
+            {newMembers.map(member => <UserItem key={member.email} firstName={member.firstName} lastName={member.lastName} email={member.email} onDelete={() => {setNewMembers(newMembers.filter(u => u !== member))}} onEdit={() => { }} />)}
         </Flex>
         <NewUserModal isOpen={isOpen} onClose={onClose} addUser={(newUser) => setNewMembers(newMembers.concat(newUser))} existingUsers={users} />
     </Flex>
