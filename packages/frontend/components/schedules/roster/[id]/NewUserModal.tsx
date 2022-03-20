@@ -42,6 +42,10 @@ export const NewUserModal: React.FC<NewUserModalProps> = ({ isOpen, onClose, add
                                 errors.email = "Email is required"
                             }
 
+                            if (!values.email.endsWith("@auburn.edu")) {
+                                errors.email = "Must be an auburn email"
+                            }
+
                             if (Object.keys(errors).length > 0) {
                                 setErrors(errors)
                                 return;
