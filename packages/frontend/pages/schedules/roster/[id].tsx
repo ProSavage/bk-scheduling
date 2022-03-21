@@ -22,17 +22,23 @@ const Roster: NextPage = () => {
     // this is mostly here in case the user wants to edit any existing original users
 
     const [users, setUsers] = useState<User[]>([]);
-    useEffect(() => {
-        const id = router.query.id as string;
+
+    const fetchData = (id: string) => {
         API.schedule.getSchedule(id).then(data => {
             setSchedule(data);
         })
         API.schedule.getScheduleRoster(id).then(data => {
             setOriginalUsers(data)
-            setUsers(data);
+            setUsers(data.roster);
         })
+    }
 
-    }, [])
+    useEffect(() => {
+        const id = router.query.id as string;
+        if (!id) return
+        fetchData(id);
+
+    }, [router])
 
     // Checks if the admin has modified any existing users first.
     // 1. check if any existing users are deleted.
@@ -40,6 +46,7 @@ const Roster: NextPage = () => {
     // 3. check if any existing users have been modified.
     const areUsersTheSame = () => {
         if (users.length !== originalUsers.length) return false;
+        console.log("users", users)
         for (const user of users) {
             const originalUser = originalUsers.find(u => u === user);
             if (!originalUser) return false;
@@ -59,10 +66,21 @@ const Roster: NextPage = () => {
         </Flex>
         <Text fontSize={"xl"}>Current Members:</Text>
         <Flex width={"100%"} my={1}>
-            {users.map(user => <UserItem key={user._id} firstName={user.firstName} lastName={user.lastName} email={user.email} onDelete={() => {setUsers(users.filter(u => u !== user))}} onEdit={() => { }} />)}
+            {users.map(user => <UserItem
+                key={user._id}
+                user={user}
+                scheduleId={schedule?._id}
+                refreshUsers={() => fetchData(schedule!!._id)}
+            />)}
         </Flex>
         <Text fontSize={"xl"}>New Members:</Text>
-        <NewUserModal isOpen={isOpen} onClose={onClose}  existingUsers={users} />
+        <NewUserModal
+            isOpen={isOpen}
+            onClose={onClose}
+            scheduleId={schedule?._id}
+            updateUsers={() => fetchData(schedule!!._id)}
+            existingUsers={users}
+        />
     </Flex>
 }
 

@@ -14,8 +14,10 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
       return (
             <Flex color={"white"} bg={"gray.800"} width={"100%"} height={"100vh"} flexDir={"column"} >
                   <Navbar />
-                  <Flex height={"100%"} flexGrow={1}>
-                        {children}
+                  <Flex height={"100%"} width={"100%"} justifyContent={"center"}>
+                        <Flex height={"100%"} flexGrow={1} maxW={"1280px"} >
+                              {children}
+                        </Flex>
                   </Flex>
             </Flex>
       );

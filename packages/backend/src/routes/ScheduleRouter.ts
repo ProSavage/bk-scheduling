@@ -25,7 +25,7 @@ scheduleRouter.post("/new",
         .bail()
         .isLength({ min: 4 }).withMessage("Name must be at least 4 characters long"),
     intervalBasicCheck("timeIntervalInMinutes").custom((number) => number < MINUTES_IN_A_DAY).withMessage("Time interval cannot be greater than a day"),
-    intervalBasicCheck("intervalsPerDay").custom((intervalsPerDay, { req }) => req.body.timeIntervalInMinutes * intervalsPerDay > MINUTES_IN_A_DAY).withMessage("Time interval * intervals per day cannot be greater than a day"),
+    intervalBasicCheck("intervalsPerDay").custom((intervalsPerDay, { req }) => req.body.timeIntervalInMinutes * intervalsPerDay < MINUTES_IN_A_DAY).withMessage("Time interval * intervals per day cannot be greater than a day"),
     body("daysOfWeek")
         .isArray().withMessage("Value must be an array")
         .bail()
@@ -90,7 +90,7 @@ scheduleRouter.delete("/:id", async (req, res) => {
 
 
 
-scheduleRouter.use("/:id/roster", scheduleRosterRouter);
+scheduleRouter.use(scheduleRosterRouter);
 
 
 

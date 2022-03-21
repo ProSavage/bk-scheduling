@@ -29,14 +29,14 @@ app.use(async (req, res, next) => {
     const token = req.headers["authorization"]?.split("Bearer ")[1];
     if (!token || token.length !== 32) {
         console.log("No token found.");
-        res.failureWithMessage("Token not provided.", 401)
+        res.failure("Token not provided.", 401)
         return;
     }
 
     const session = await Sessions.findOne({ token });
     if (!session) {
         console.log("Invalid session");
-        res.failureWithMessage("Invalid session.", 401);
+        res.failure("Invalid session.", 401);
         return;
     }
 
@@ -45,7 +45,7 @@ app.use(async (req, res, next) => {
 
     if (!user) {
         console.log("User for this token was not found.");
-        res.failureWithMessage("User for this token was not found.", 401);
+        res.failure("User for this token was not found.", 401);
         return;
     }
 
@@ -61,6 +61,5 @@ const connection = connect("mongodb://localhost:27017/bk-scheduling").then(() =>
     console.log("Database connected");
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
-       
     });
 });

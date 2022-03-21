@@ -14,12 +14,15 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
             width={"100%"}
             p={3}
             bg={"gray.700"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
+            justifyContent={"center"}
         >
-            <Text cursor={"pointer"} onClick={() => router.push("/")} fontWeight={"bold"} fontSize={"xl"}>BK-Scheduling</Text>
-            <Flex>
-                <IconButton aria-label="login" icon={<Key size={20} />} onClick={() => router.push("/auth/login")} />
+            <Flex width={"100%"} maxW={"1280px"} justifyContent={"space-between"} alignItems={"center"}>
+                <Text cursor={"pointer"} onClick={() => router.push("/")} fontWeight={"bold"} fontSize={"xl"}>BK-Scheduling</Text>
+                <Flex>
+                    <IconButton aria-label="login"
+                        icon={<Key size={20} />} onClick={() => router.push("/auth/login")}
+                    />
+                </Flex>
             </Flex>
         </Flex>
     );

@@ -2,15 +2,18 @@ import { UserInfo } from "@bk-scheduling/common";
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react"
+import { schedule } from "../../../../api/schedule";
 import { FormInputField } from "../../../util/FormControlField";
 
 interface NewUserModalProps {
+    scheduleId: string | undefined;
+    updateUsers(): void
     isOpen: boolean;
     onClose: () => void;
     existingUsers: UserInfo[]
 }
 
-export const NewUserModal: React.FC<NewUserModalProps> = ({ isOpen, onClose, existingUsers }) => {
+export const NewUserModal: React.FC<NewUserModalProps> = ({ scheduleId, updateUsers, isOpen, onClose, existingUsers }) => {
 
 
     return (
@@ -52,7 +55,15 @@ export const NewUserModal: React.FC<NewUserModalProps> = ({ isOpen, onClose, exi
                                 return;
                             }
 
-                            addUser(values)
+                            if (!scheduleId) {
+                                errors.email = "Schedule id is required (internal error)"
+                            }
+
+                            const { success } = await schedule.inviteUserToScheduleRoster(
+                                scheduleId!!,
+                                values
+                            )
+                            updateUsers()
                             onClose()
                         }}
                     >

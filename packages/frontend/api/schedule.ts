@@ -1,4 +1,4 @@
-import { ScheduleTime } from "@bk-scheduling/common";
+import { ScheduleTime, User, UserInfo } from "@bk-scheduling/common";
 import { axiosClient } from "./axios";
 
 export const schedule = {
@@ -24,5 +24,15 @@ export const schedule = {
     async deleteSchedule(id: string) {
         return (await axiosClient.delete(`/schedule/${id}`)).data;
     },
+    async inviteUserToScheduleRoster(id: string, user: UserInfo) {
+        return (await axiosClient.post(`/schedule/${id}/roster/invite`, {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName
+        })).data;
+    },
+    async deleteUserFromScheduleRoster(id: string, user: User) {
+        return (await axiosClient.post(`/schedule/${id}/roster/delete`, {userId: user._id})).data;
+    }
 
 };
