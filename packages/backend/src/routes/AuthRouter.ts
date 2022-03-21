@@ -14,7 +14,8 @@ authRouter.post("/login",
       body("email")
             .isEmail().withMessage("Invalid email")
             .bail()
-            .custom(email => email.endsWith("@auburn.edu")).withMessage("You must use an auburn email to login."),
+            .custom(email => email.endsWith("@auburn.edu")).withMessage("You must use an auburn email to login.")
+            .normalizeEmail(),
       async (req, res) => {
             const { email } = req.body;
             const errors = validationResult(req);
