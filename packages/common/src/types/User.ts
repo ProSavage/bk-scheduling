@@ -1,6 +1,6 @@
 import { Schedule } from "..";
 
-export type User = NewUser & {
+export type User = UserInfo & {
     _id: string,
     isAdmin: boolean,
     schedules: Schedule["_id"][]
@@ -8,7 +8,7 @@ export type User = NewUser & {
 
 // I made this type for the frontend
 // It's just a subset with the minimal data needed to create a user.
-export interface NewUser {
+export interface UserInfo {
     email: string,
     firstName: string,
     lastName: string,

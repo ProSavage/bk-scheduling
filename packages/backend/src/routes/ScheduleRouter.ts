@@ -1,25 +1,31 @@
 import { WeekDay, Schedule } from "@bk-scheduling/common";
 import express from "express";
-import { body, Meta, validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import shortid from "shortid";
 import { Schedules } from "../database/models/Schedule";
 import { Users } from "../database/models/User";
+import { scheduleRosterRouter } from "./ScheduleRosterRouter";
 
 const scheduleRouter = express.Router();
 const MINUTES_IN_A_DAY = 60 * 24;
-scheduleRouter.post("/new",
-    body("name")
-        .isString().withMessage("Name must be a string")
-        .bail()
-        .isLength({ min: 4 }).withMessage("Name must be at least 4 characters long"),
-    body(["intervalsPerDay", "timeIntervalInMinutes"])
+
+
+const intervalBasicCheck = (field: string) => {
+    return body(field)
         .isNumeric().withMessage("Value must be a number")
         .bail()
         .toInt()
         .custom(number => number > 0).withMessage("Value must be greater than 0")
         .bail()
-        .if((_value: any, { path }: Meta) => path === "timeIntervalInMinutes")
-        .custom((number) => number < MINUTES_IN_A_DAY).withMessage("Time interval cannot be greater than a day"),
+}
+
+scheduleRouter.post("/new",
+    body("name")
+        .isString().withMessage("Name must be a string")
+        .bail()
+        .isLength({ min: 4 }).withMessage("Name must be at least 4 characters long"),
+    intervalBasicCheck("timeIntervalInMinutes").custom((number) => number < MINUTES_IN_A_DAY).withMessage("Time interval cannot be greater than a day"),
+    intervalBasicCheck("intervalsPerDay").custom((intervalsPerDay, { req }) => req.body.timeIntervalInMinutes * intervalsPerDay > MINUTES_IN_A_DAY).withMessage("Time interval * intervals per day cannot be greater than a day"),
     body("daysOfWeek")
         .isArray().withMessage("Value must be an array")
         .bail()
@@ -41,15 +47,8 @@ scheduleRouter.post("/new",
         // Validate input
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log(errors.array())
             res.failure(errors.array());
             return
-        }
-
-        // Is timeIntervalInMinutes * intervalsPerDay less than a day
-        if (timeIntervalInMinutes * intervalsPerDay > MINUTES_IN_A_DAY) {
-            res.failureValidation("intervalsPerDay", "Time interval * intervals per day cannot be greater than a day")
-            return;
         }
 
         // Create the schedule
@@ -68,7 +67,7 @@ scheduleRouter.post("/new",
 
 
         await Schedules.create(schedule);
-        res.success({schedule})
+        res.success({ schedule })
     });
 
 scheduleRouter.delete("/:id", async (req, res) => {
@@ -80,7 +79,7 @@ scheduleRouter.delete("/:id", async (req, res) => {
     }
 
     if (schedule.owner !== req.user._id) {
-        res.failure("You do not have permission to delete this schedule.");
+        res.failureWithMessage("You do not have permission to delete this schedule.");
         return;
     }
 
@@ -89,32 +88,21 @@ scheduleRouter.delete("/:id", async (req, res) => {
     res.json({ success: true });
 })
 
-scheduleRouter.get("/:id/roster", async (req, res) => {
-    const { id } = req.params;
-    const schedule = await Schedules.findOne({ _id: id });
-    if (!schedule) {
-        res.failure("Schedule not found");
-        return;
-    }
 
-    if (schedule.owner !== req.user._id) {
-        res.json("You do not own this schedule");
-        return;
-    }
 
-    const roster = await Users.find({ schedules: { $in: schedule._id } })
-    res.json(roster);
-})
+scheduleRouter.use("/:id/roster", scheduleRosterRouter);
+
+
 
 scheduleRouter.get("/:id", async (req, res) => {
     const schedule = await Schedules.findOne({ _id: req.params.id });
     if (!schedule) {
-        res.failure("Schedule not found.");
+        res.failureWithMessage("Schedule not found.");
         return
     }
 
     if (schedule.owner !== req.user._id) {
-        res.failure("You do not have permission to view this schedule.");
+        res.failureWithMessage("You do not have permission to view this schedule.");
         return;
     }
 

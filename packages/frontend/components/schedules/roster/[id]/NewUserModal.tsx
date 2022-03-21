@@ -1,5 +1,5 @@
-import { NewUser, User } from "@bk-scheduling/common";
-import { Button, Text, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { UserInfo } from "@bk-scheduling/common";
+import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react"
 import { FormInputField } from "../../../util/FormControlField";
@@ -7,11 +7,12 @@ import { FormInputField } from "../../../util/FormControlField";
 interface NewUserModalProps {
     isOpen: boolean;
     onClose: () => void;
-    addUser: (newUser: NewUser) => void,
-    existingUsers: NewUser[]
+    existingUsers: UserInfo[]
 }
 
-export const NewUserModal: React.FC<NewUserModalProps> = ({ isOpen, onClose, addUser, existingUsers }) => {
+export const NewUserModal: React.FC<NewUserModalProps> = ({ isOpen, onClose, existingUsers }) => {
+
+
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -23,11 +24,11 @@ export const NewUserModal: React.FC<NewUserModalProps> = ({ isOpen, onClose, add
                 <ModalBody>
                     <Formik
                         initialValues={{ firstName: "", lastName: "", email: "" }}
-                        onSubmit={async (values, { setErrors }) => { 
+                        onSubmit={async (values, { setErrors }) => {
                             const errors: any = {}
                             const existingUserWithEmail = existingUsers.find(user => user.email === values.email);
                             if (existingUserWithEmail) {
-                                errors.email = "User with this email already exists" 
+                                errors.email = "User with this email already exists"
                             }
 
                             if (values.firstName === "") {

@@ -22,11 +22,6 @@ const Roster: NextPage = () => {
     // this is mostly here in case the user wants to edit any existing original users
 
     const [users, setUsers] = useState<User[]>([]);
-
-
-    const [newMembers, setNewMembers] = useState<NewUser[]>([]);
-
-
     useEffect(() => {
         const id = router.query.id as string;
         API.schedule.getSchedule(id).then(data => {
@@ -45,7 +40,6 @@ const Roster: NextPage = () => {
     // 3. check if any existing users have been modified.
     const areUsersTheSame = () => {
         if (users.length !== originalUsers.length) return false;
-        if (newMembers.length > 0) return false;
         for (const user of users) {
             const originalUser = originalUsers.find(u => u === user);
             if (!originalUser) return false;
@@ -68,10 +62,7 @@ const Roster: NextPage = () => {
             {users.map(user => <UserItem key={user._id} firstName={user.firstName} lastName={user.lastName} email={user.email} onDelete={() => {setUsers(users.filter(u => u !== user))}} onEdit={() => { }} />)}
         </Flex>
         <Text fontSize={"xl"}>New Members:</Text>
-        <Flex width={"100%"} my={1}>
-            {newMembers.map(member => <UserItem key={member.email} firstName={member.firstName} lastName={member.lastName} email={member.email} onDelete={() => {setNewMembers(newMembers.filter(u => u !== member))}} onEdit={() => { }} />)}
-        </Flex>
-        <NewUserModal isOpen={isOpen} onClose={onClose} addUser={(newUser) => setNewMembers(newMembers.concat(newUser))} existingUsers={newMembers.concat(users)} />
+        <NewUserModal isOpen={isOpen} onClose={onClose}  existingUsers={users} />
     </Flex>
 }
 

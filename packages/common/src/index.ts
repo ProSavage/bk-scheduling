@@ -1,7 +1,7 @@
 import { Schedule, ScheduleTime } from "./types/Schedule";
-import { NewUser, User } from "./types/User";
+import { UserInfo, User } from "./types/User";
 import { WeekDay } from "./WeekDay";
 
 export { WeekDay };
 
-export type { Schedule, User, NewUser, ScheduleTime };
+export type { Schedule, User, UserInfo, ScheduleTime };
