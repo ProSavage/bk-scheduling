@@ -31,7 +31,7 @@ export const UserItem: React.FC<UserItemProps> = ({ user, scheduleId, refreshUse
     }
 
     return (
-        <Flex width={"100%"} backgroundColor={"gray.500"} borderRadius={5} p={3} alignItems={"center"} justifyContent={"space-between"}>
+        <Flex width={"100%"} backgroundColor={"gray.500"} borderRadius={5} p={3} alignItems={"center"} justifyContent={"space-between"} my={1}>
             <Flex flexDir={"column"}>
                 <Text fontSize={"medium"} fontWeight={"medium"}>{user.firstName} {user.lastName}</Text>
                 <Text fontStyle={"italic"}>{user.email}</Text>

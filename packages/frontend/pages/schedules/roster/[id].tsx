@@ -65,7 +65,7 @@ const Roster: NextPage = () => {
             </Flex>
         </Flex>
         <Text fontSize={"xl"}>Current Members:</Text>
-        <Flex width={"100%"} my={1}>
+        <Flex width={"100%"} my={1} flexDir={"column"}>
             {users.map(user => <UserItem
                 key={user._id}
                 user={user}
