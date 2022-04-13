@@ -1,5 +1,5 @@
 import { User } from "@bk-scheduling/common";
-import { Flex, IconButton, Text, useToast } from "@chakra-ui/react";
+import { Flex, IconButton, Text, Tooltip, useToast } from "@chakra-ui/react";
 import React from "react"
 import { Edit2, Trash, Trash2 } from "react-feather";
 import { schedule } from "../../../../api/schedule";
@@ -37,8 +37,12 @@ export const UserItem: React.FC<UserItemProps> = ({ user, scheduleId, refreshUse
                 <Text fontStyle={"italic"}>{user.email}</Text>
             </Flex>
             <Flex>
-                <IconButton variant={"ghost"} size={"md"} aria-label="edit" icon={<Edit2 />} />
-                <IconButton variant={"ghost"} size={"md"} aria-label="delete" icon={<Trash2 />} onClick={() => onDelete()} />
+                <Tooltip label={"Edit User Info"}>
+                    <IconButton variant={"ghost"} size={"md"} aria-label="edit" icon={<Edit2 />} />
+                </Tooltip>
+                <Tooltip label={"Remove user from roster."}>
+                    <IconButton variant={"ghost"} size={"md"} aria-label="delete" icon={<Trash2 />} onClick={() => onDelete()} />
+                </Tooltip>
             </Flex>
         </Flex>
     );
