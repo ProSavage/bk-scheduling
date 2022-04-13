@@ -1,5 +1,5 @@
 import { Schedule } from "@bk-scheduling/common";
-import { Button, Flex, IconButton, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Flex, IconButton, Text, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react"
 import { Trash2, Users } from "react-feather";
@@ -23,18 +23,22 @@ export const ScheduleItem: React.FC<ScheduleItemProps> = ({ schedule, refresh })
             <Flex width={"100%"} justifyContent={"space-between"} alignItems={"center"}>
                 <Text fontSize={"lg"} color={"white"} fontWeight={"bold"}>{schedule.name}</Text>
                 <Flex>
-                    <IconButton
-                        aria-label="edit users"
-                        variant={"ghost"}
-                        icon={<Users />}
-                        onClick={() => router.push("/schedules/roster/[id]", `/schedules/roster/${schedule._id}`)}
-                    />
-                    <IconButton
-                        aria-label="delete"
-                        variant={"ghost"}
-                        icon={<Trash2 />}
-                        onClick={() => onOpen()}
-                    />
+                    <Tooltip label={"Edit Schedule Roster"}>
+                        <IconButton
+                            aria-label="edit users"
+                            variant={"ghost"}
+                            icon={<Users />}
+                            onClick={() => router.push("/schedules/roster/[id]", `/schedules/roster/${schedule._id}`)}
+                        />
+                    </Tooltip>
+                    <Tooltip label={"Delete Schedule"}>
+                        <IconButton
+                            aria-label="delete"
+                            variant={"ghost"}
+                            icon={<Trash2 />}
+                            onClick={() => onOpen()}
+                        />
+                    </Tooltip>
                 </Flex>
             </Flex>
             <Text fontStyle={"italic"}>0 members on roster.</Text>
