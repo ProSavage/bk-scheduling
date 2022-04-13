@@ -1,6 +1,6 @@
+import { User } from "@bk-scheduling/common";
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-import { User } from "./User";
 
 export interface Session {
       _id: string,

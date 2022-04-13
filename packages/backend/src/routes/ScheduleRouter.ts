@@ -3,7 +3,6 @@ import express from "express";
 import { body, validationResult } from "express-validator";
 import shortid from "shortid";
 import { Schedules } from "../database/models/Schedule";
-import { Users } from "../database/models/User";
 import { scheduleRosterRouter } from "./ScheduleRosterRouter";
 
 const scheduleRouter = express.Router();
