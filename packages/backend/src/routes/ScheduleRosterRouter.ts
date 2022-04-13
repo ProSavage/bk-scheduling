@@ -1,6 +1,6 @@
 import { Schedule } from "@bk-scheduling/common";
 import express, { Request } from "express";
-import { body } from "express-validator";
+import { body, validationResult } from "express-validator";
 import shortid from "shortid";
 import { Schedules } from "../database/models/Schedule";
 import { Users } from "../database/models/User";
@@ -13,9 +13,7 @@ interface ScheduleRequest extends Request<{ id: string; }, any, any, any, Record
 
 scheduleRosterRouter.use("/:id/roster", async (req, res, next) => {
       const { id } = req.params;
-      console.log("params", req.query);
       const schedule = await Schedules.findOne({ _id: id });
-      console.log(id, "id")
       if (!schedule) {
             res.failureWithMessage("Schedule not found");
             return;
@@ -28,9 +26,29 @@ scheduleRosterRouter.use("/:id/roster", async (req, res, next) => {
 
 
       (req as ScheduleRequest).schedule = schedule;
-
+      console.log("continue")
       next();
 })
+
+scheduleRosterRouter.post("/:id/roster/edit",
+      body("userId").isString().withMessage("roster member's id must be string")
+            .bail()
+            .custom(id => shortid.isValid(id)).withMessage("invalid shortid."),
+      body("firstName").isString().withMessage("roster member's name must be string"),
+      body("lastName").isString().withMessage("roster member's name must be string"),
+      async (expressRequest, res) => {
+            const errors = validationResult(expressRequest);
+            if (!errors.isEmpty()) {
+                  res.failure(errors.array());
+                  return
+            }
+            const req = expressRequest as ScheduleRequest;
+            const userId = req.body.userId;
+            console.log({userId, firstName: req.body.firstName, lastName: req.body.lastName})
+            await Users.updateOne({ _id: userId }, { $set: { firstName: req.body.firstName, lastName: req.body.lastName } })
+            res.success({});
+      })
+
 
 
 scheduleRosterRouter.get("/:id/roster", async (expressRequest, res) => {
@@ -53,6 +71,12 @@ scheduleRosterRouter.post("/:id/roster/invite",
             .isLength({ min: 1 }).withMessage("roster member's name must be at least 1 character")
       ,
       async (expressRequest, res) => {
+
+            const errors = validationResult(expressRequest);
+            if (!errors.isEmpty()) {
+                  res.failure(errors.array());
+                  return
+            }
             const req = expressRequest as ScheduleRequest;
             const email = req.body.email;
 
@@ -79,6 +103,11 @@ scheduleRosterRouter.post("/:id/roster/delete",
             .bail()
             .custom(id => shortid.isValid(id)).withMessage("invalid shortid."),
       async (expressRequest, res) => {
+            const errors = validationResult(expressRequest);
+            if (!errors.isEmpty()) {
+                  res.failure(errors.array());
+                  return
+            }
             const req = expressRequest as ScheduleRequest;
             const userId = req.body.userId;
             console.log(userId, "userId", req.schedule._id, "scheduleId")
@@ -87,6 +116,7 @@ scheduleRosterRouter.post("/:id/roster/delete",
             res.success({});
 
       })
+
 
 
 export { scheduleRosterRouter }

@@ -71,9 +71,10 @@ const Roster: NextPage = () => {
                 user={user}
                 scheduleId={schedule?._id}
                 refreshUsers={() => fetchData(schedule!!._id)}
+                existingUsers={users}
             />)}
         </Flex>
-        <Text fontSize={"xl"}>New Members:</Text>
+        
         <NewUserModal
             isOpen={isOpen}
             onClose={onClose}

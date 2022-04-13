@@ -31,8 +31,15 @@ export const schedule = {
             lastName: user.lastName
         })).data;
     },
+    async editScheduleUser(id: string, userId: string, firstName: string, lastName: string) {
+        return (await axiosClient.post(`/schedule/${id}/roster/edit`, {
+            userId: userId,
+            firstName: firstName,
+            lastName: lastName
+        })).data;
+    },
     async deleteUserFromScheduleRoster(id: string, user: User) {
-        return (await axiosClient.post(`/schedule/${id}/roster/delete`, {userId: user._id})).data;
+        return (await axiosClient.post(`/schedule/${id}/roster/delete`, { userId: user._id })).data;
     }
 
 };
