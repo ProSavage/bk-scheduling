@@ -1,4 +1,4 @@
-import { Flex, Text, IconButton } from "@chakra-ui/react";
+import { Flex, Text, IconButton, Tooltip } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react"
 import { Key } from "react-feather";
@@ -19,9 +19,11 @@ export const Navbar: React.FC<NavbarProps> = ({ }) => {
             <Flex width={"100%"} maxW={"1280px"} justifyContent={"space-between"} alignItems={"center"}>
                 <Text cursor={"pointer"} onClick={() => router.push("/")} fontWeight={"bold"} fontSize={"xl"}>BK-Scheduling</Text>
                 <Flex>
-                    <IconButton aria-label="login"
-                        icon={<Key size={20} />} onClick={() => router.push("/auth/login")}
-                    />
+                    <Tooltip label={"Login"}>
+                        <IconButton aria-label="login"
+                            icon={<Key size={20} />} onClick={() => router.push("/auth/login")}
+                        />
+                    </Tooltip>
                 </Flex>
             </Flex>
         </Flex>
