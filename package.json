@@ -5,6 +5,9 @@
   	"packages/*"
   ],
   "scripts": {
+    "build-base": "cd packages/common && yarn build",
+    "dev:backend": "cd packages/backend && yarn dev",
+    "dev:frontend": "cd packages/frontend && yarn dev",
     "dev": "yarn install && cd packages/common && yarn build-watch & cd packages/frontend && yarn dev & cd packages/backend && yarn dev"
   }
 }
